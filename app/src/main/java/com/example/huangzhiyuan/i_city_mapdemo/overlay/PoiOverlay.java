@@ -20,9 +20,20 @@ import java.util.List;
  */
 public class PoiOverlay {
 
-    private List<PoiItem> mPois;
-    private AMap mAMap;
+    private List<PoiItem> mPois;   //序列化
+    private AMap mAMap;  //定义一个地图对象
     private ArrayList<Marker> mPoiMarks = new ArrayList<Marker>();
+
+    /** Marker：地图上的一个点绘制图标
+     *    属性:
+     * 锚点:  图标摆在地图上的基准点
+     * 位置:  通过经纬度值标记在地图上
+     * 标题:  点击marker显示在信息窗口上的文字，随时可以改
+     * 片段:  除了标题外的文字随时可以改
+     * 图标:  显示的图标
+     */
+
+
     /**
      * 通过此构造函数创建Poi图层对象
      * @param amap 地图对象

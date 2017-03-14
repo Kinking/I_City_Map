@@ -43,9 +43,9 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity implements PoiSearch.OnPoiSearchListener, AMapLocationListener,LocationSource {
 
-    private AMap aMap;
-    private MapView mapView;
-    private LatLonPoint centerpoint = new LatLonPoint(39.983178,116.464348);
+    private AMap aMap;  //定义地图对象
+    private MapView mapView;  //一个用于显示地图的视图，从服务端获取数据，捕捉屏幕触控手势事件
+    private LatLonPoint centerpoint = new LatLonPoint(39.983178,116.464348);//设置一个地图点
     private ViewPoiOverlay poiOverlay;
 
 
@@ -53,13 +53,18 @@ public class MainActivity extends AppCompatActivity implements PoiSearch.OnPoiSe
     public AMapLocationClient mapLocationClient = null;
     public AMapLocationClientOption mapLocationClientOption = null;
 
-////    private Button button;
+    private Button button=null;
+
+    private AMapLocation testLocation=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 //        setSupportActionBar().hide();
         setContentView(R.layout.activity_main);
+
+        button= (Button) findViewById(R.id.bt_test);
+
         /**
          *设置离线地图存储目录，在下载离线地图或初始化地图设置
          * 使用过程中可自行设置，若自行设置了离线地图存储的路径，
@@ -77,37 +82,41 @@ public class MainActivity extends AppCompatActivity implements PoiSearch.OnPoiSe
         aMap.setMyLocationEnabled(true);
         //设置定位的类型为定位模式,可以有定位、跟随或地图根据面向方向旋转几种
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
+
+        /**
+         * 显示点的逻辑就doSearch这一个方法
+         */
         doPOISearch();
 
-//        button = (Button) findViewById(R.id.bt);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent i = new Intent();
-//                i.setClass(MainActivity.this,Location_Activity.class);
-//                startActivity(i);
-//            }
-//        });
 
-//        mLocationClient = new AMapLocationClient(this);
-//        //初始化定位参数
-//        mLocationOption = new AMapLocationClientOption();
-//        //设置定位监听
-//        mLocationClient.setLocationListener(this);
-//        //设置定位模式为高精度模式,Battery_Saving为低功耗模式,Device_Sensors是仅设备模式
-//        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-//        //设置定位间隔,单位毫秒,默认为2000ms
-//        mLocationOption.setInterval(2000);
-//        //设置定位参数
-//        mLocationClient.setLocationOption(mLocationOption);
-//        //此方法为每隔固定时间发起一次定位请求,为了减少电量消耗或网络流量消耗
-//        //注意设置合适的定位时间的间隔(最小间隔支持为2000ms),并且在合适的时间调用stopLocation()方法来取消定位请求
-//        //在定位结束后,在合适的生命周期调用onDestroy()方法
-//        //在单词定位情况下,定位无论成功与否,都无需调用stopLocation()方法移除请求,定位SDK内部会移除
-//        //启动定位
-//        mLocationClient.startLocation();
+        /**
+         * 初版逻辑，点击test按钮，添加一个自定义的Marker上去
+         */
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String s = "测试状态";
+                //获取当前纬度
+                double latitude = testLocation.getLatitude();
+                //获取当前经度
+                double longitude = testLocation.getLongitude();
+                ViewPoiOverlay viewPoiOverlay=null;
+
+
+
+
+
+            }
+        });
+
 
     }
+
+    /**
+     * 搜索具体以公园附近的所有公园，将其存入相关列表中
+     * POI Point of interest，兴趣点，开始搜索
+     * 内部类Query用于设定搜索参数
+     */
 
     private void doPOISearch(){
         PoiSearch.Query query = new PoiSearch.Query("公园","110101","北京");
