@@ -2,6 +2,8 @@ package com.example.huangzhiyuan.i_city_mapdemo.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
+import android.provider.SyncStateContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +24,8 @@ import com.amap.api.maps.MapsInitializer;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
+import com.amap.api.maps.model.Marker;
+import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.offlinemap.OfflineMapCity;
 import com.amap.api.maps.offlinemap.OfflineMapManager;
 import com.amap.api.maps.offlinemap.OfflineMapStatus;
@@ -89,26 +93,58 @@ public class MainActivity extends AppCompatActivity implements PoiSearch.OnPoiSe
         doPOISearch();
 
 
+
+
         /**
          * 初版逻辑，点击test按钮，添加一个自定义的Marker上去
+         * 先使其跳到第二个测试marker的地图上去
          */
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String s = "测试状态";
-                //获取当前纬度
-                double latitude = testLocation.getLatitude();
-                //获取当前经度
-                double longitude = testLocation.getLongitude();
-                ViewPoiOverlay viewPoiOverlay=null;
-
-
-
-
+//                String s = "测试状态";
+//                //获取当前纬度
+//                double latitude = testLocation.getLatitude();
+//                //获取当前经度
+//                double longitude = testLocation.getLongitude();
+//                ViewPoiOverlay viewPoiOverlay=null;
 
             }
         });
 
+
+        /**
+         * addMarker 在地图上添加一个Marker
+         * 相关参数：
+         *   1.MarkerOptions  设置marker覆盖物的锚点图标
+         *   2.position       设置放锚点的坐标
+         *   3.title          设置放锚点的标题文字
+         *   4.snippet        电表记得内容
+         *   5.draggable      点是否可拖拽
+         *   6.visible        点标记是否可见
+         *   7.anchor         点标记的锚点
+         *   8.alpha          点的透明度
+         */
+
+        //设置一个表示经纬度地理位置的对象
+        LatLng latLngBJ = new LatLng(34.50000,121.43333);
+
+        final Marker marker = aMap.addMarker(new MarkerOptions().position(latLngBJ).title("上海").snippet("DefaultMarker"));
+
+        /***添加自定义的Marker***/
+
+        LatLng latLngJY = new LatLng(120.08000,32.34000);
+        MarkerOptions markerOption = new MarkerOptions();
+        markerOption.position(latLngJY);
+        markerOption.title("姜堰市").snippet("姜堰市:我的家乡");
+        markerOption.visible(true);
+        markerOption.draggable(false);//设置Marker不可拖动
+        markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
+        .decodeResource(getResources(),R.drawable.custom_info_bubble)));
+        //将Marker设置为贴地显示,可以双指头下拉地图查看效果
+        markerOption.setFlat(true);//设置平贴地图效果
+        aMap.addMarker(markerOption);
+        /***添加自定义的Marker***/
 
     }
 
@@ -135,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements PoiSearch.OnPoiSe
         if(aMap == null){
             aMap = mapView.getMap();
         }
+        //设置地图移到当前位置
         aMap.moveCamera(CameraUpdateFactory.newLatLngZoom(converTolagLng(centerpoint),13));
     }
 

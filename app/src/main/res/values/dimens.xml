@@ -12,7 +12,7 @@
     <dimen name="normal_margin">10dp</dimen>
     <dimen name="font_58">29dp</dimen>
     <dimen name="font_170">85dp</dimen>
-    
+
     <dimen name="offline_down_title_hight">25dp</dimen>
     <dimen name="font_22">11sp</dimen>
     <dimen name="font_24">12sp</dimen>
@@ -22,7 +22,7 @@
     <dimen name="font_32">16sp</dimen>
     <dimen name="font_34">17sp</dimen>
     <dimen name="font_36">18sp</dimen>
-   
+
     <dimen name="poi_title_size">20sp</dimen>
     <dimen name="poi_field_size">16sp</dimen>
     <dimen name="margin_left">15dp</dimen>

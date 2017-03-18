@@ -3,120 +3,119 @@
 
     <string name="app_name">I_City_MapDemo</string>
 
-	<string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
-	<!-- 定位需要的内容 -->
+    <!-- 定位需要的内容 -->
     <string name="title_main">高德定位SDK功能展示</string>
-    
+
     <string name="title_location">获取定位数据</string>
     <string name="location">获取定位数据</string>
     <string name="location_dec">调用定位接口获取定位数据</string>
-    
+
     <string name="title_geoFence">地理围栏</string>
     <string name="geoFence">地理围栏</string>
     <string name="geoFence_dec">展示地理围栏功能</string>
-    
+
     <string name="roundGeoFence">圆形地理围栏</string>
     <string name="roundGeoFence_dec">展示圆形地理围栏</string>
-    
+
     <string name="polygonGeoFence">多边形地理围栏</string>
     <string name="polygonGeoFence_dec">展示多边形地理围栏</string>
-    
+
     <string name="keywordGeoFence">关键字地理围栏</string>
     <string name="keywordGeoFence_dec">展示关键字地理围栏</string>
-    
+
     <string name="nearbyGeoFence">周边地理围栏</string>
     <string name="nearbyGeoFence_dec">展示周边地理围栏</string>
-    
+
     <string name="districtGeoFence">行政区划地理围栏</string>
     <string name="districtGeoFence_dec">展示行政区划地理围栏</string>
-    
+
     <string name="multipleGeoFence">综合展示</string>
     <string name="multipleGeoFence_dec">综合展示地理围栏的功能</string>
-    
-    
+
+
     <string name="oldGeoFence">旧版地理围栏</string>
     <string name="oldGeoFence_dec">旧版地理围栏，不建议使用</string>
-    
-    
-    
+
+
     <string name="title_assistantLocation">H5辅助定位</string>
     <string name="assistantLocation">H5辅助定位</string>
     <string name="assistantLocation_dec">展示H5辅助定位功能</string>
-    
+
     <string name="title_tools">地图计算工具</string>
     <string name="tools">地图计算工具</string>
     <string name="tools_dec">坐标转换等功能演示</string>
-    
+
     <string name="title_lastLocation">获取最后一次位置</string>
     <string name="lastLocation">获取最后一次位置</string>
-	<string name="lastLocation_dec">获取最后一次定位的位置，此位置是一个历史位置</string>
-    
-    
+    <string name="lastLocation_dec">获取最后一次定位的位置，此位置是一个历史位置</string>
+
+
     <string name="title_alarmCPU">定时唤起CPU</string>
     <string name="alarmCPU">定时唤起cpu</string>
-	<string name="alarmCPU_dec">通过一个闹钟程序后台定时唤起cpu</string>
-	
-	<string name="title_errorCode">错误码说明</string>
-	<string name="errorCode">错误码说明</string>
-	<string name="errorCode_dec">错误码说明以及对应的解决方法</string>
-    
-	<string name="defaultInteval">2000</string>
-	<string name="defaultHttpTimeout">30000</string>
-	
-	<string name="battery_saving">低功耗模式</string>
+    <string name="alarmCPU_dec">通过一个闹钟程序后台定时唤起cpu</string>
+
+    <string name="title_errorCode">错误码说明</string>
+    <string name="errorCode">错误码说明</string>
+    <string name="errorCode_dec">错误码说明以及对应的解决方法</string>
+
+    <string name="defaultInteval">2000</string>
+    <string name="defaultHttpTimeout">30000</string>
+
+    <string name="battery_saving">低功耗模式</string>
     <string name="device_sensors">仅设备模式</string>
     <string name="hight_accuracy">高精度模式</string>
     <string name="interval">定位周期(ms)</string>
-	<string name="httpTimeout">网络超时(ms)</string>
-	<string name="location_once">单次定位</string>
-	<string name="needAddress">逆地理编码</string>
-	<string name="cacheAble">开启缓存</string>
-	<string name="onceLastest">提高首次定位精度</string>
-	<string name="gpsFirst">GPS优先</string>
+    <string name="httpTimeout">网络超时(ms)</string>
+    <string name="location_once">单次定位</string>
+    <string name="needAddress">逆地理编码</string>
+    <string name="cacheAble">开启缓存</string>
+    <string name="onceLastest">提高首次定位精度</string>
+    <string name="gpsFirst">GPS优先</string>
     <string name="useSensor">使用传感器</string>
     <string name="wifiScan">开启wifi扫描</string>
-	
-	<string name="alarmInterval">唤醒周期(s)</string>
-	
-	<string name="startLocation">开始定位</string>
-	<string name="stopLocation">停止定位</string>
-	
-	<string name="fenceRadius">围栏半径</string>
-	<string name="meter">米</string>
-	<string name="activatesAction">触发条件</string>
-	<string name="alertIn">进入</string>
-	<string name="alertOut">离开</string>
-	<string name="alertStated">停留</string>
-	<string name="addFence">添加围栏</string>
-	<string name="removeFence">移除围栏</string>
-	
-	<string name="hideOption">隐藏设置</string>
-	<string name="showOption">显示设置</string>
-	
-	<string name="showList">显示列表</string>
-	<string name="hideList">隐藏列表</string>
-	
-	<string name="fence_round">圆形围栏</string>
-	<string name="fence_polygon">多边形</string>
-	<string name="fence_keyword">关键字围栏</string>
-	<string name="fence_nearby">周边围栏</string>
-	<string name="fence_district">行政区划围栏</string>
-	
-	<string name="getLastLocation">获取最后位置</string>
-	
-	<string name="startAssistantLocation">启动H5辅助定位</string>
-	<string name="stopAssistantLocation">停止H5辅助定位</string>
-	<string name="urlLocation">浏览器定位</string>
-	<string name="assistantLocationInfo">辅助定位已经启动，请点击模拟浏览器请求或者在浏览器中输入http://127.0.0.1:43689/进行测试</string>
-	
-	<string name="coordinateConvert">坐标转换</string>
-	<string name="checkIsChina">位置区域判断</string>
-	
-	<string name="notifyTitle">提示</string>
-	<string name="notifyMsg">当前应用缺少必要权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。</string>
-	<string name="setting">设置</string>
-	<string name="cancel">取消</string>
+
+    <string name="alarmInterval">唤醒周期(s)</string>
+
+    <string name="startLocation">开始定位</string>
+    <string name="stopLocation">停止定位</string>
+
+    <string name="fenceRadius">围栏半径</string>
+    <string name="meter">米</string>
+    <string name="activatesAction">触发条件</string>
+    <string name="alertIn">进入</string>
+    <string name="alertOut">离开</string>
+    <string name="alertStated">停留</string>
+    <string name="addFence">添加围栏</string>
+    <string name="removeFence">移除围栏</string>
+
+    <string name="hideOption">隐藏设置</string>
+    <string name="showOption">显示设置</string>
+
+    <string name="showList">显示列表</string>
+    <string name="hideList">隐藏列表</string>
+
+    <string name="fence_round">圆形围栏</string>
+    <string name="fence_polygon">多边形</string>
+    <string name="fence_keyword">关键字围栏</string>
+    <string name="fence_nearby">周边围栏</string>
+    <string name="fence_district">行政区划围栏</string>
+
+    <string name="getLastLocation">获取最后位置</string>
+
+    <string name="startAssistantLocation">启动H5辅助定位</string>
+    <string name="stopAssistantLocation">停止H5辅助定位</string>
+    <string name="urlLocation">浏览器定位</string>
+    <string name="assistantLocationInfo">辅助定位已经启动，请点击模拟浏览器请求或者在浏览器中输入http://127.0.0.1:43689/进行测试</string>
+
+    <string name="coordinateConvert">坐标转换</string>
+    <string name="checkIsChina">位置区域判断</string>
+
+    <string name="notifyTitle">提示</string>
+    <string name="notifyMsg">当前应用缺少必要权限。\n\n请点击\"设置\"-\"权限\"-打开所需权限。</string>
+    <string name="setting">设置</string>
+    <string name="cancel">取消</string>
 	
 	
 	
