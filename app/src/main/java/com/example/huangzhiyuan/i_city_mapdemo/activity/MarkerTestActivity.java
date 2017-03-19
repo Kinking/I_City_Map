@@ -23,9 +23,13 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.example.huangzhiyuan.i_city_mapdemo.R;
+import com.example.huangzhiyuan.i_city_mapdemo.bean.Moment;
+import com.example.huangzhiyuan.i_city_mapdemo.utils.json.WriteJson;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MarkerTestActivity extends AppCompatActivity implements AMapLocationListener,LocationSource{
 
@@ -65,16 +69,38 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
         //设置定位的类型为定位模式,可以有定位、跟随或地图根据面向方向旋转几种
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
 
+        //获取朋友圈内容
+        final String momentContent = et.getText().toString().trim();
+
+        //获取当前时间
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        String date = simpleDateFormat.format(new java.util.Date());
 
 
 
+        /**
+         * 接下来的逻辑要将moment转换为json字符串传送到服务器
+         */
+        try{
+            Moment moment = new Moment(1,1,"jerry",momentContent,date,Latitude,Longitude);
+            //构造一个moment对象
+            List<Moment> list = new ArrayList<Moment>();
+            list.add(moment);
 
+            WriteJson writeJson = new WriteJson();
+            String jsonmomentstring = writeJson.getJsonData(list);
+            System.out.println(jsonmomentstring);
 
+            /**
+             * 下面要写的是async-http框架负责发送请求的内容
+             */
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String text = et.getText().toString().trim();
 
                 //设置一个表示经纬度地理位置的对象
                 LatLng latLngSH = new LatLng(Latitude,Longitude);
@@ -83,7 +109,7 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
 //                aMapLocation.getLongitude();
 
 //                final Marker marker = aMap.addMarker(new MarkerOptions().position(latLngSH).title("上海").snippet("DefaultMarker"));
-                final Marker marker = aMap.addMarker(new MarkerOptions().position(latLngSH).snippet(text));
+                final Marker marker = aMap.addMarker(new MarkerOptions().position(latLngSH).snippet(momentContent));
                 marker.showInfoWindow();
 
 
