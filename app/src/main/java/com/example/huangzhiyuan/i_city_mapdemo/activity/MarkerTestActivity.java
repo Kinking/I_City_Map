@@ -1,6 +1,8 @@
 package com.example.huangzhiyuan.i_city_mapdemo.activity;
 
+import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.os.Message;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,12 +26,15 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.example.huangzhiyuan.i_city_mapdemo.R;
 import com.example.huangzhiyuan.i_city_mapdemo.bean.Moment;
+import com.example.huangzhiyuan.i_city_mapdemo.service.MapOperation;
 import com.example.huangzhiyuan.i_city_mapdemo.utils.json.WriteJson;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Handler;
+import java.util.logging.LogRecord;
 
 public class MarkerTestActivity extends AppCompatActivity implements AMapLocationListener,LocationSource{
 
@@ -40,6 +45,9 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
 
     double Latitude;
     double Longitude;
+
+
+    String jsonMomentString=null;
 
 
     /**
@@ -70,33 +78,8 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
 
         //获取朋友圈内容
-        final String momentContent = et.getText().toString().trim();
+        String momentContent = et.getText().toString().trim();
 
-        //获取当前时间
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        String date = simpleDateFormat.format(new java.util.Date());
-
-
-
-        /**
-         * 接下来的逻辑要将moment转换为json字符串传送到服务器
-         */
-        try{
-            Moment moment = new Moment(1,1,"jerry",momentContent,date,Latitude,Longitude);
-            //构造一个moment对象
-            List<Moment> list = new ArrayList<Moment>();
-            list.add(moment);
-
-            WriteJson writeJson = new WriteJson();
-            String jsonmomentstring = writeJson.getJsonData(list);
-            System.out.println(jsonmomentstring);
-
-            /**
-             * 下面要写的是async-http框架负责发送请求的内容
-             */
-        }catch (Exception e){
-            e.printStackTrace();
-        }
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,13 +87,48 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
 
                 //设置一个表示经纬度地理位置的对象
                 LatLng latLngSH = new LatLng(Latitude,Longitude);
+                String momentContent = et.getText().toString().trim();
 
-//                aMapLocation.getLatitude();
-//                aMapLocation.getLongitude();
 
 //                final Marker marker = aMap.addMarker(new MarkerOptions().position(latLngSH).title("上海").snippet("DefaultMarker"));
                 final Marker marker = aMap.addMarker(new MarkerOptions().position(latLngSH).snippet(momentContent));
                 marker.showInfoWindow();
+
+                try{
+
+                    //获取当前时间
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                    String date = simpleDateFormat.format(new java.util.Date());
+                    /**
+                     * 接下来的逻辑要将moment转换为json字符串传送到服务器
+                     */
+                    String momentContentInner = et.getText().toString().trim();
+                    Moment moment = new Moment(1,1,"jerry",momentContentInner,date,Latitude,Longitude);
+                    //构造一个moment对象
+                    List<Moment> list = new ArrayList<Moment>();
+                    list.add(moment);
+                    WriteJson writeJson = new WriteJson();
+                    jsonMomentString = writeJson.getJsonData(list);
+                    System.out.println(jsonMomentString+"------------------------------");
+                    /**
+                     * 下面要写的是async-http框架负责发送请求的内容
+                     */
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            MapOperation operation = new MapOperation();
+                            String result = operation.uploadContent("MomentController",jsonMomentString);
+                            Message msg = new Message();
+                            msg.obj = result;
+                            handler.sendMessage(msg);
+                        }
+                    }).start();
+                }catch (Exception e){
+                    Toast.makeText(MarkerTestActivity.this, "服务器未打开", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+
+
 
 
             }
@@ -132,6 +150,26 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
 
 
     }
+
+    /******************* Handler **************************/
+    android.os.Handler handler=new android.os.Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+//            dialog.dismiss();
+
+            try {
+
+                String msgobj=msg.obj.toString();
+                super.handleMessage(msg);
+
+            }catch (Exception e){
+                Toast.makeText(MarkerTestActivity.this, "服务器未打开", Toast.LENGTH_LONG).show();
+                e.printStackTrace();
+            }
+        }
+    };
+    /*********************************************/
+
 
     //地图初始化函数
     private void init(){

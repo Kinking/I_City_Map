@@ -1,12 +1,14 @@
 package com.example.huangzhiyuan.i_city_mapdemo.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by huangzhiyuan on 2017/3/19.
  */
-public class Moment {
+public class Moment implements Serializable{
     private Integer mId;
     private Integer uId;
-    private String userNickName;
+    private String userNickname;
     private String momentContent;
     private String mUpTime;
     private Double longitude;
@@ -19,7 +21,7 @@ public class Moment {
         this.momentContent = momentContent;
         this.mUpTime = mUpTime;
         this.uId = uId;
-        this.userNickName = userNickName;
+        this.userNickname = userNickName;
     }
 
     public Double getLatitude() {
@@ -71,10 +73,10 @@ public class Moment {
     }
 
     public String getUserNickName() {
-        return userNickName;
+        return userNickname;
     }
 
     public void setUserNickName(String userNickName) {
-        this.userNickName = userNickName;
+        this.userNickname = userNickName;
     }
 }
