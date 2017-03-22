@@ -12,7 +12,8 @@ import java.net.URL;
  */
 public class ConnNet {
 
-    private static final String SERVICE_URL="http://172.20.10.7:8080/ICity/";  //公司wifi
+      private static final String SERVICE_URL="http://172.29.0.220:8080/ICity/";  //公司wifi
+//    private static final String SERVICE_URL="http://172.20.10.7:8080/ICity/";  //公司wifi
 //    private static final String SERVICE_URL="http://1.168.177.239:8080/ICity/";  //公司Wi-Fi
 //    private static final String SERVICE_URL="http://192.168.1.104:8080/ICity/";  //家力Wi-Fi
 //    private static final String SERVICE_URL="http://119.29.69.123:8080/ICity/";  //云服务器地址119.29.69.123:8080

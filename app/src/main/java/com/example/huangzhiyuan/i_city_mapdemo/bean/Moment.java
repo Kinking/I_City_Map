@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by huangzhiyuan on 2017/3/19.
  */
-public class Moment implements Serializable{
+public class Moment {
     private Integer mId;
     private Integer uId;
     private String userNickname;
