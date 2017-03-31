@@ -2,6 +2,8 @@ package com.example.huangzhiyuan.i_city_mapdemo.activity;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.os.HandlerThread;
+import android.os.Looper;
 import android.os.Message;
 import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +22,7 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
+import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
@@ -27,7 +30,11 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.example.huangzhiyuan.i_city_mapdemo.R;
 import com.example.huangzhiyuan.i_city_mapdemo.bean.Moment;
 import com.example.huangzhiyuan.i_city_mapdemo.service.MapOperation;
+import com.example.huangzhiyuan.i_city_mapdemo.utils.json.JsonUtil;
 import com.example.huangzhiyuan.i_city_mapdemo.utils.json.WriteJson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,11 +43,14 @@ import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
+import cz.msebera.android.httpclient.Header;
+
 public class MarkerTestActivity extends AppCompatActivity implements AMapLocationListener,LocationSource{
 
     private AMap aMap;  //定义地图对象
     private MapView mapView;  //一个用于显示地图的视图，从服务端获取数据，捕捉屏幕触控手势事件
     private Button button = null;
+    private Button button1 = null;
     private EditText et = null;
 
     double Latitude;
@@ -64,6 +74,7 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marker_test);
         button= (Button) findViewById(R.id.bt_test2);
+        button1= (Button) findViewById(R.id.bt_test3);
         et = (EditText) findViewById(R.id.et_state);
         //获取地图控件引用
         mapView = (MapView) findViewById(R.id.map_marker);
@@ -76,23 +87,27 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
         aMap.setMyLocationEnabled(true);
         //设置定位的类型为定位模式,可以有定位、跟随或地图根据面向方向旋转几种
         aMap.setMyLocationType(AMap.LOCATION_TYPE_LOCATE);
-
-        //获取朋友圈内容
-        String momentContent = et.getText().toString().trim();
-
+//        markerInit();
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 //设置一个表示经纬度地理位置的对象
-                LatLng latLngSH = new LatLng(Latitude,Longitude);
+                LatLng latLngLocation = new LatLng(Latitude,Longitude);
+                LatLng latLngSH = new LatLng(31.270000,121.520000);
                 String momentContent = et.getText().toString().trim();
 
 
-//                final Marker marker = aMap.addMarker(new MarkerOptions().position(latLngSH).title("上海").snippet("DefaultMarker"));
-                final Marker marker = aMap.addMarker(new MarkerOptions().position(latLngSH).snippet(momentContent));
+                final Marker marker1 = aMap.addMarker(new MarkerOptions().position(latLngSH).title("上海").snippet("DefaultMarker"));
+                marker1.setVisible(true);
+                marker1.showInfoWindow();
+
+
+                final Marker marker = aMap.addMarker(new MarkerOptions().position(latLngLocation).snippet(momentContent));
+                marker.setVisible(true);
                 marker.showInfoWindow();
+
 
                 try{
 
@@ -127,11 +142,45 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
                     Toast.makeText(MarkerTestActivity.this, "服务器未打开", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
-
-
-
-
             }
+
+            /******************* Handler **************************/
+            android.os.Handler handler=new android.os.Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    try {
+
+                        String msgobj=msg.obj.toString();
+                        super.handleMessage(msg);
+
+                    }catch (Exception e){
+                        Toast.makeText(MarkerTestActivity.this, "服务器未打开", Toast.LENGTH_LONG).show();
+                        e.printStackTrace();
+                    }
+                }
+            };
+        });
+
+
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try{
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Looper.prepare();
+                            markerInit();
+                            Looper.loop();
+                        }
+                    }).start();
+
+                }catch (Exception e){
+                    Toast.makeText(MarkerTestActivity.this, "加载出现异常", Toast.LENGTH_LONG).show();
+                    e.printStackTrace();
+                }
+            }
+
         });
 
 
@@ -151,32 +200,88 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
 
     }
 
-    /******************* Handler **************************/
-    android.os.Handler handler=new android.os.Handler() {
+
+    /**
+     * 初始化地图上的所有marker
+     */
+   public void markerInit(){
+       //定义请求字符串
+       String request = null;
+       //创建异步请求
+       AsyncHttpClient client = new AsyncHttpClient();
+       //输入要请求的url
+       String url = "http://172.20.10.7:8080/ICity/GetMomentInfoController";
+//       String url = "http://172.29.2.168:8080/ICity/MomentController";
+
+       //请求的参数对象
+       RequestParams params = new RequestParams();
+       //将参数加入到参数对象中去
+       params.put("jsonMomentRequest",request);
+       //进行post请求
+       client.post(url, params, new AsyncHttpResponseHandler() {
+           @Override
+           public void onSuccess(int i, Header[] headers, byte[] bytes) {
+               //i表示状态码
+               if(i == 200){
+                   //从bytes中获取marker信息
+                   String jsonMomentInfoList = new String(bytes);
+
+                   JsonUtil jsonUtil = new JsonUtil();
+
+                   /**
+                    * 将收到的jsonString解析为List<Moment>
+                    */
+                   List<Moment> momentList = jsonUtil.momentStringFromJson(jsonMomentInfoList);
+
+                   /***声明一个MarkerOptions类型数组组***/
+                   MarkerOptions []mar=new MarkerOptions[momentList.size()];
+
+                   /***用for循环给每个MarkerOptions对象赋值***/
+                   for(int j=0;j<momentList.size();j++){
+                       //获取list中对象的地理位置
+                       LatLng lat = new LatLng(momentList.get(j).getLatitude(), momentList.get(j).getLongitude());
+                       //给MarkerOptions数组赋地理位置值和moment内容
+                       mar[i].position(lat).snippet(momentList.get(j).getMomentContent());
+                   }
+
+                   for(int j=0;j<mar.length;j++){
+                       Message message = new Message();
+                       Bundle bundle = new Bundle();
+                       bundle.putParcelable("MarkerOption",mar[i]);
+                       message.setData(bundle);
+
+                   }
+               }
+           }
+
+           @Override
+           public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+               throwable.printStackTrace();
+           }
+       });
+   }
+
+    android.os.Handler handler1=new android.os.Handler() {
         @Override
         public void handleMessage(Message msg) {
-//            dialog.dismiss();
-
-            try {
-
-                String msgobj=msg.obj.toString();
-                super.handleMessage(msg);
-
-            }catch (Exception e){
-                Toast.makeText(MarkerTestActivity.this, "服务器未打开", Toast.LENGTH_LONG).show();
-                e.printStackTrace();
-            }
+            //发送过来的Message包含MarkerOptions对象，取出后add就可以了。
+            Bundle bundle = msg.getData();
+            MarkerOptions mar = (MarkerOptions) bundle.get("MarkerOptions");
+            Marker marker = aMap.addMarker(mar);
+            marker.showInfoWindow();
         }
     };
-    /*********************************************/
 
 
-    //地图初始化函数
+
+        //地图初始化函数
     private void init(){
         if(aMap == null){
             aMap = mapView.getMap();
         }
     }
+
+
 
     /***地图生命周期***/
     @Override
@@ -281,4 +386,23 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
         mapLocationClient = null;
     }
     /***地图生命周期***/
+
+    /**
+     * 测试MarkerOption
+     */
+//    public void MarkerOptionTest(){
+//        MarkerOptions mark = new MarkerOptions();
+//        LatLng lat = new LatLng(39.908127, 116.375257);
+//        mark.position(lat); //mark的坐标位置
+//        ArrayList list_icons = new ArrayList();
+//        BitmapDescriptor fromResource01 = new BitmapDescriptorFactory().fromResource(R.drawable.custom_info_bubble);
+//        BitmapDescriptor fromResource02 = new BitmapDescriptorFactory().fromResource(R.drawable.custom_info_bubble);
+//        list_icons.add(fromResource01);
+//        list_icons.add(fromResource02);
+//        mark.icons(list_icons);//添加Marker显示的图片
+//        mark.period(1); //设置图片更换的频率，值越小换的越快
+//        aMap.addMarker(mark);
+//    }
+
+
 }
