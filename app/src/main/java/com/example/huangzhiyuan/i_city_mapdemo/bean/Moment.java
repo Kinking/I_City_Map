@@ -14,6 +14,10 @@ public class Moment {
     private Double longitude;
     private Double latitude;
 
+    public Moment(){
+        super();
+    }
+
     public Moment(Integer mId, Integer uId, String userNickName,String momentContent, String mUpTime, Double latitude, Double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;

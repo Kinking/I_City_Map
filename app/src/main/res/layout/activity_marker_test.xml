@@ -39,7 +39,7 @@
             android:layout_marginTop="10dp"/>
 
         <Button
-            android:id="@+id/bt_test3"
+            android:id="@+id/bt_init"
             android:text="初始化"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -24,7 +24,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import cz.msebera.android.httpclient.Header;
+
 
 /**
  * Created by huangzhiyuan on 2017/3/20.
@@ -100,34 +100,6 @@ public class MapOperation {
             e.printStackTrace();
         }
         return result;
-    }
-
-    public String InitMarker(String urlPath,String jsonString){
-        //定义请求字符串
-        String request = null;
-        //创建异步请求
-        AsyncHttpClient client = new AsyncHttpClient();
-        //输入要请求的url
-        urlPath = "http://172.20.10.8:8080/ICity/GetMomentInfoController";
-        //请求的参数对象
-        RequestParams params = new RequestParams();
-        //将参数加入到参数对象中去
-        params.put("jsonMomentRequest",request);
-        //进行post请求
-        client.post(urlPath, params, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int i, Header[] headers, byte[] bytes) {
-
-            }
-
-            @Override
-            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
-
-            }
-        });
-
-
-        return null;
     }
 
 }

@@ -1,11 +1,8 @@
 package com.example.huangzhiyuan.i_city_mapdemo.activity;
 
-import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.os.HandlerThread;
+
 import android.os.Looper;
 import android.os.Message;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,11 +16,8 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
-import com.amap.api.maps.model.BitmapDescriptor;
-import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
@@ -36,21 +30,22 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.apache.http.Header;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
 
-import cz.msebera.android.httpclient.Header;
+
+
 
 public class MarkerTestActivity extends AppCompatActivity implements AMapLocationListener,LocationSource{
 
     private AMap aMap;  //定义地图对象
     private MapView mapView;  //一个用于显示地图的视图，从服务端获取数据，捕捉屏幕触控手势事件
     private Button button = null;
-    private Button button1 = null;
+    private Button initBtn = null;
     private EditText et = null;
 
     double Latitude;
@@ -74,7 +69,7 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_marker_test);
         button= (Button) findViewById(R.id.bt_test2);
-        button1= (Button) findViewById(R.id.bt_test3);
+        initBtn= (Button) findViewById(R.id.bt_init);
         et = (EditText) findViewById(R.id.et_state);
         //获取地图控件引用
         mapView = (MapView) findViewById(R.id.map_marker);
@@ -98,6 +93,18 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
                 LatLng latLngSH = new LatLng(31.270000,121.520000);
                 String momentContent = et.getText().toString().trim();
 
+                /**
+                 * addMarker 在地图上添加一个Marker
+                 * 相关参数：
+                 *   1.MarkerOptions  设置marker覆盖物的锚点图标
+                 *   2.position       设置放锚点的坐标
+                 *   3.title          设置放锚点的标题文字
+                 *   4.snippet        电表记得内容
+                 *   5.draggable      点是否可拖拽
+                 *   6.visible        点标记是否可见
+                 *   7.anchor         点标记的锚点
+                 *   8.alpha          点的透明度
+                 */
 
                 final Marker marker1 = aMap.addMarker(new MarkerOptions().position(latLngSH).title("上海").snippet("DefaultMarker"));
                 marker1.setVisible(true);
@@ -162,7 +169,7 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
         });
 
 
-        button1.setOnClickListener(new View.OnClickListener() {
+        initBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try{
@@ -182,22 +189,6 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
             }
 
         });
-
-
-        /**
-         * addMarker 在地图上添加一个Marker
-         * 相关参数：
-         *   1.MarkerOptions  设置marker覆盖物的锚点图标
-         *   2.position       设置放锚点的坐标
-         *   3.title          设置放锚点的标题文字
-         *   4.snippet        电表记得内容
-         *   5.draggable      点是否可拖拽
-         *   6.visible        点标记是否可见
-         *   7.anchor         点标记的锚点
-         *   8.alpha          点的透明度
-         */
-
-
     }
 
 
@@ -206,7 +197,7 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
      */
    public void markerInit(){
        //定义请求字符串
-       String request = null;
+       String request = "jsonMomentRequest";
        //创建异步请求
        AsyncHttpClient client = new AsyncHttpClient();
        //输入要请求的url
@@ -225,38 +216,54 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
                if(i == 200){
                    //从bytes中获取marker信息
                    String jsonMomentInfoList = new String(bytes);
+//                   System.out.println(jsonMomentInfoList);
 
+
+                   //测试是否收到了字符串
                    JsonUtil jsonUtil = new JsonUtil();
 
-                   /**
-                    * 将收到的jsonString解析为List<Moment>
-                    */
+
+                   /*** 将收到的jsonString解析为List<Moment>***/
                    List<Moment> momentList = jsonUtil.momentStringFromJson(jsonMomentInfoList);
 
-                   /***声明一个MarkerOptions类型数组组***/
-                   MarkerOptions []mar=new MarkerOptions[momentList.size()];
 
+                   //测试是否将回来的Json字符串解析成功
+                   System.out.println(momentList.get(0).getUserNickName()+":"+momentList.get(0).getMomentContent()+"\n"
+                           +momentList.get(1).getUserNickName()+":"+momentList.get(1).getMomentContent()+"\n"
+                           +momentList.get(2).getUserNickName()+":"+momentList.get(2).getMomentContent()+"\n"
+                           +momentList.get(3).getUserNickName()+":"+momentList.get(3).getMomentContent()+"\n"
+                           +momentList.get(4).getUserNickName()+":"+momentList.get(4).getMomentContent()+"\n"
+                           +momentList.get(5).getUserNickName()+":"+momentList.get(5).getMomentContent()+"\n"
+                           +momentList.get(6).getUserNickName()+":"+momentList.get(6).getMomentContent()+"\n"
+                           +momentList.get(7).getUserNickName()+":"+momentList.get(7).getMomentContent()+"\n");
+
+
+                   /***声明一个MarkerOptions类型数数组***/
+                    MarkerOptions []mar = new MarkerOptions[momentList.size()];
                    /***用for循环给每个MarkerOptions对象赋值***/
-                   for(int j=0;j<momentList.size();j++){
+                   for(int j = 0;j<momentList.size();j++){
                        //获取list中对象的地理位置
-                       LatLng lat = new LatLng(momentList.get(j).getLatitude(), momentList.get(j).getLongitude());
+                       LatLng lat = new LatLng(momentList.get(j).getLatitude(),momentList.get(j).getLongitude());
                        //给MarkerOptions数组赋地理位置值和moment内容
-                       mar[i].position(lat).snippet(momentList.get(j).getMomentContent());
+                       mar[j].position(lat).snippet(momentList.get(j).getMomentContent());
                    }
 
-                   for(int j=0;j<mar.length;j++){
+                   for(int j = 0;j<mar.length;j++){
                        Message message = new Message();
                        Bundle bundle = new Bundle();
                        bundle.putParcelable("MarkerOption",mar[i]);
                        message.setData(bundle);
-
+                       handler1.sendMessage(message);//更新Map操作，发送消息到消息队列
                    }
                }
+
            }
 
            @Override
            public void onFailure(int i, Header[] headers, byte[] bytes, Throwable throwable) {
+               Toast.makeText(MarkerTestActivity.this,"网络超时，请稍后重试",Toast.LENGTH_LONG).show();
                throwable.printStackTrace();
+
            }
        });
    }
@@ -386,23 +393,4 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
         mapLocationClient = null;
     }
     /***地图生命周期***/
-
-    /**
-     * 测试MarkerOption
-     */
-//    public void MarkerOptionTest(){
-//        MarkerOptions mark = new MarkerOptions();
-//        LatLng lat = new LatLng(39.908127, 116.375257);
-//        mark.position(lat); //mark的坐标位置
-//        ArrayList list_icons = new ArrayList();
-//        BitmapDescriptor fromResource01 = new BitmapDescriptorFactory().fromResource(R.drawable.custom_info_bubble);
-//        BitmapDescriptor fromResource02 = new BitmapDescriptorFactory().fromResource(R.drawable.custom_info_bubble);
-//        list_icons.add(fromResource01);
-//        list_icons.add(fromResource02);
-//        mark.icons(list_icons);//添加Marker显示的图片
-//        mark.period(1); //设置图片更换的频率，值越小换的越快
-//        aMap.addMarker(mark);
-//    }
-
-
 }
