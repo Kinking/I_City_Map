@@ -42,7 +42,7 @@ import java.util.List;
 
 public class MarkerTestActivity extends AppCompatActivity implements AMapLocationListener,LocationSource{
 
-    private AMap aMap;  //定义地图对象
+    private AMap aMap = null;  //定义地图对象
     private MapView mapView;  //一个用于显示地图的视图，从服务端获取数据，捕捉屏幕触控手势事件
     private Button button = null;
     private Button initBtn = null;
@@ -53,6 +53,8 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
 
 
     String jsonMomentString=null;
+
+
 
 
     /**
@@ -125,7 +127,7 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
                      * 接下来的逻辑要将moment转换为json字符串传送到服务器
                      */
                     String momentContentInner = et.getText().toString().trim();
-                    Moment moment = new Moment(1,1,"jerry",momentContentInner,date,Latitude,Longitude);
+                    Moment moment = new Moment(1,1,"卷",momentContentInner,date,Latitude,Longitude);
                     //构造一个moment对象
                     List<Moment> list = new ArrayList<Moment>();
                     list.add(moment);
@@ -240,18 +242,21 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
 
                    /***声明一个MarkerOptions类型数数组***/
                     MarkerOptions []mar = new MarkerOptions[momentList.size()];
+                   for(int j=0;j<momentList.size();j++){
+                       mar[j] = new MarkerOptions();
+                   }
                    /***用for循环给每个MarkerOptions对象赋值***/
                    for(int j = 0;j<momentList.size();j++){
                        //获取list中对象的地理位置
                        LatLng lat = new LatLng(momentList.get(j).getLatitude(),momentList.get(j).getLongitude());
                        //给MarkerOptions数组赋地理位置值和moment内容
-                       mar[j].position(lat).snippet(momentList.get(j).getMomentContent());
+                       mar[j].position(lat).snippet(momentList.get(j).getMomentContent()).title(momentList.get(j).getUserNickName());
                    }
 
                    for(int j = 0;j<mar.length;j++){
                        Message message = new Message();
                        Bundle bundle = new Bundle();
-                       bundle.putParcelable("MarkerOption",mar[i]);
+                       bundle.putParcelable("MarkerOption",mar[j]);
                        message.setData(bundle);
                        handler1.sendMessage(message);//更新Map操作，发送消息到消息队列
                    }
@@ -265,19 +270,23 @@ public class MarkerTestActivity extends AppCompatActivity implements AMapLocatio
                throwable.printStackTrace();
 
            }
+
+           android.os.Handler handler1=new android.os.Handler() {
+               @Override
+               public void handleMessage(Message msg) {
+                   //发送过来的Message包含MarkerOptions对象，取出后add就可以了。
+                   Bundle bundle = msg.getData();
+                   MarkerOptions mar = new MarkerOptions();
+                   mar = (MarkerOptions) bundle.get("MarkerOption");
+                   Marker marker = aMap.addMarker(mar);
+                   marker.setVisible(true);
+                   marker.showInfoWindow();
+               }
+           };
        });
    }
 
-    android.os.Handler handler1=new android.os.Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            //发送过来的Message包含MarkerOptions对象，取出后add就可以了。
-            Bundle bundle = msg.getData();
-            MarkerOptions mar = (MarkerOptions) bundle.get("MarkerOptions");
-            Marker marker = aMap.addMarker(mar);
-            marker.showInfoWindow();
-        }
-    };
+
 
 
 
